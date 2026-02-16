@@ -53,18 +53,13 @@ export interface SandboxState {
 }
 
 interface Store {
-  // Connection
   isConnected: boolean
   socket: WebSocket | null
-  
-  // Data
   events: Event[]
   metrics: Metrics | null
   metricsHistory: Metrics[]
   alerts: Alert[]
   sandboxState: SandboxState | null
-  
-  // Actions
   connect: (url: string) => void
   disconnect: () => void
   setSpeed: (speed: number) => void
@@ -88,9 +83,7 @@ export const useStore = create<Store>((set, get) => ({
 
   connect: (url: string) => {
     const existingSocket = get().socket
-    if (existingSocket) {
-      existingSocket.close()
-    }
+    if (existingSocket) existingSocket.close()
 
     const socket = new WebSocket(url)
 
@@ -101,17 +94,12 @@ export const useStore = create<Store>((set, get) => ({
 
     socket.onclose = () => {
       set({ isConnected: false, socket: null })
-      // Auto reconnect after 3s
       setTimeout(() => {
-        if (!get().isConnected) {
-          get().connect(url)
-        }
+        if (!get().isConnected) get().connect(url)
       }, 3000)
     }
 
-    socket.onerror = (err) => {
-      console.error('WebSocket error:', err)
-    }
+    socket.onerror = (err) => console.error('WebSocket error:', err)
 
     socket.onmessage = (event) => {
       try {
@@ -120,11 +108,8 @@ export const useStore = create<Store>((set, get) => ({
 
         switch (type) {
           case 'event':
-            set((s) => ({
-              events: [payload, ...s.events].slice(0, 100)
-            }))
+            set((s) => ({ events: [payload, ...s.events].slice(0, 100) }))
             break
-
           case 'metrics':
             const m = { ...payload, timestamp: new Date().toISOString() }
             set((s) => ({
@@ -132,17 +117,13 @@ export const useStore = create<Store>((set, get) => ({
               metricsHistory: [...s.metricsHistory, m].slice(-60)
             }))
             break
-
           case 'alert':
             set((s) => ({
-              alerts: [payload, ...s.alerts].slice(0, 50)
+              alerts: [{ ...payload, acknowledged: false }, ...s.alerts].slice(0, 50)
             }))
             break
-
           case 'state':
-            if (payload.scenario) {
-              set({ sandboxState: payload })
-            }
+            if (payload.scenario) set({ sandboxState: payload })
             break
         }
       } catch (e) {
@@ -154,8 +135,7 @@ export const useStore = create<Store>((set, get) => ({
   },
 
   disconnect: () => {
-    const { socket } = get()
-    if (socket) socket.close()
+    get().socket?.close()
     set({ socket: null, isConnected: false })
   },
 
@@ -224,9 +204,7 @@ export const useStore = create<Store>((set, get) => ({
 
   acknowledgeAlert: (id: string) => {
     set((s) => ({
-      alerts: s.alerts.map((a) =>
-        a.id === id ? { ...a, acknowledged: true } : a
-      )
+      alerts: s.alerts.map((a) => a.id === id ? { ...a, acknowledged: true } : a)
     }))
   },
 }))

@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 84% 5%;
+    --foreground: 210 40% 98%;
+    --card: 222 84% 5%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 84% 5%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 224 76% 48%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Live indicator */
+.live-dot {
+  @apply relative inline-block w-2 h-2;
+}
+
+.live-dot::before {
+  content: '';
+  @apply absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75;
+}
+
+.live-dot::after {
+  content: '';
+  @apply absolute inset-0 rounded-full bg-green-500;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/40;
+}
+
+/* Event animations */
+.event-enter {
+  @apply animate-slide-in;
+}
+
+/* Number flash effect */
+@keyframes flash-up {
+  0% { @apply bg-green-500/30; }
+  100% { @apply bg-transparent; }
+}
+
+@keyframes flash-down {
+  0% { @apply bg-red-500/30; }
+  100% { @apply bg-transparent; }
+}
+
+.flash-up {
+  animation: flash-up 0.5s ease-out;
+}
+
+.flash-down {
+  animation: flash-down 0.5s ease-out;
+}

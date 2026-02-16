@@ -1,12 +1,11 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
-
 export const metadata: Metadata = {
-  title: 'LivePulse | Real-time Analytics Dashboard',
-  description: 'Real-time analytics platform with interactive sandbox environment',
+  title: 'LivePulse | Real-time E-Commerce Analytics',
+  description: 'A real-time analytics sandbox demonstrating WebSocket data streaming, interactive visualizations, and modern dashboard design patterns.',
+  keywords: ['analytics', 'dashboard', 'real-time', 'e-commerce', 'websocket', 'react', 'next.js'],
+  authors: [{ name: 'Michael Palmer', url: 'https://github.com/mpalmer79' }],
 }
 
 export default function RootLayout({
@@ -16,7 +15,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-slate-50`}>{children}</body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
+      <body>{children}</body>
     </html>
   )
 }

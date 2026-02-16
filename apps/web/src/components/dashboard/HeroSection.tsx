@@ -63,7 +63,7 @@ export function HeroSection() {
                 Simulation
               </div>
               <div className="flex items-center gap-2">
-                {sandboxState?.isRunning ? (
+                {sandboxState?.is_running ? (
                   <button onClick={pauseSimulation} className="btn-secondary">
                     Pause
                   </button>
@@ -103,9 +103,9 @@ export function HeroSection() {
             <div className="flex items-center gap-4">
               <button
                 onClick={toggleChaos}
-                className={cn('btn-secondary', sandboxState?.chaosEnabled ? 'ring-2 ring-purple-300' : '')}
+                className={cn('btn-secondary', sandboxState?.chaos_enabled ? 'ring-2 ring-purple-300' : '')}
               >
-                Chaos {sandboxState?.chaosEnabled ? 'ON' : 'OFF'}
+                Chaos {sandboxState?.chaos_enabled ? 'ON' : 'OFF'}
               </button>
             </div>
 
@@ -129,6 +129,7 @@ export function HeroSection() {
                 </button>
               </div>
             </div>
+
           </div>
         </div>
       </div>

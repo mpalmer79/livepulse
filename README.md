@@ -4,7 +4,7 @@ Real-time analytics platform with interactive sandbox environment.
 
 ## Quick Start
 
-### 1. Start Backend
+### 1. Start Backend 
 ```bash
 cd apps/server
 python -m venv venv

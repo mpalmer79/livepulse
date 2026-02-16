@@ -4,26 +4,30 @@
 
 @layer base {
   :root {
-    --background: 222 84% 5%;
-    --foreground: 210 40% 98%;
-    --card: 222 84% 5%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 84% 5%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 224 76% 48%;
-    --radius: 0.5rem;
+    --background: 0 0% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 252 87% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 252 87% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 252 87% 60%;
+    --radius: 0.75rem;
+    
+    /* Gradient colors */
+    --gradient-start: 252 87% 60%;
+    --gradient-end: 199 89% 48%;
   }
 }
 
@@ -32,26 +36,27 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
 /* Live indicator */
 .live-dot {
-  @apply relative inline-block w-2 h-2;
+  @apply relative inline-block w-2.5 h-2.5;
 }
 
 .live-dot::before {
   content: '';
-  @apply absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75;
+  @apply absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-75;
 }
 
 .live-dot::after {
   content: '';
-  @apply absolute inset-0 rounded-full bg-green-500;
+  @apply absolute inset-0 rounded-full bg-emerald-500;
 }
 
-/* Scrollbar */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -62,29 +67,101 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/40;
+  @apply bg-slate-300 rounded-full hover:bg-slate-400;
+}
+
+/* Card styles */
+.card-gradient {
+  background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(220 14% 98%) 100%);
+}
+
+.card-hover {
+  @apply transition-all duration-300 ease-out;
+}
+
+.card-hover:hover {
+  @apply shadow-lg -translate-y-0.5;
+}
+
+/* Gradient backgrounds */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
+}
+
+.bg-gradient-success {
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+}
+
+.bg-gradient-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+}
+
+.bg-gradient-info {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+}
+
+/* Metric card icon backgrounds */
+.metric-icon {
+  @apply p-3 rounded-xl;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
 }
 
 /* Event animations */
 .event-enter {
-  @apply animate-slide-in;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* Number flash effect */
-@keyframes flash-up {
-  0% { @apply bg-green-500/30; }
-  100% { @apply bg-transparent; }
-}
-
-@keyframes flash-down {
-  0% { @apply bg-red-500/30; }
-  100% { @apply bg-transparent; }
-}
-
 .flash-up {
-  animation: flash-up 0.5s ease-out;
+  animation: flashGreen 0.5s ease-out;
 }
 
 .flash-down {
-  animation: flash-down 0.5s ease-out;
+  animation: flashRed 0.5s ease-out;
+}
+
+@keyframes flashGreen {
+  0% { background-color: rgba(16, 185, 129, 0.2); }
+  100% { background-color: transparent; }
+}
+
+@keyframes flashRed {
+  0% { background-color: rgba(239, 68, 68, 0.2); }
+  100% { background-color: transparent; }
+}
+
+/* Drill-down indicator */
+.drilldown-card {
+  @apply cursor-pointer relative overflow-hidden;
+}
+
+.drilldown-card::after {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full;
+  transition: transform 0.5s ease;
+}
+
+.drilldown-card:hover::after {
+  @apply translate-x-full;
+}
+
+/* Chart container */
+.chart-container {
+  @apply bg-white rounded-2xl shadow-sm border border-slate-100 p-6;
+}
+
+/* Progress bar gradient */
+.progress-gradient {
+  background: linear-gradient(90deg, #7c3aed 0%, #06b6d4 100%);
 }

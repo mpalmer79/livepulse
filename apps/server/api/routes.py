@@ -152,4 +152,61 @@ async def list_scenarios() -> Dict[str, Any]:
     return {
         "scenarios": [
             {
-                "id":
+                "id": Scenario.ECOMMERCE.value,
+                "name": "E-commerce",
+                "description": "Simulates online store activity: orders, carts, page views",
+                "available": True
+            },
+            {
+                "id": Scenario.IOT.value,
+                "name": "IoT Sensors",
+                "description": "Simulates IoT device data: temperature, humidity, motion",
+                "available": False
+            },
+            {
+                "id": Scenario.SOCIAL.value,
+                "name": "Social Media",
+                "description": "Simulates social engagement: posts, likes, shares, comments",
+                "available": False
+            },
+            {
+                "id": Scenario.FINANCIAL.value,
+                "name": "Financial Trading",
+                "description": "Simulates market data: trades, quotes, order book",
+                "available": False
+            },
+        ]
+    }
+
+
+@router.get("/scenarios/{scenario}/event-types")
+async def get_event_types(request: Request, scenario: str) -> Dict[str, Any]:
+    """Get available event types for a scenario"""
+    orchestrator = request.app.state.sandbox_orchestrator
+    
+    try:
+        scenario_enum = Scenario(scenario)
+    except ValueError:
+        raise HTTPException(status_code=400, detail=f"Invalid scenario: {scenario}")
+    
+    if scenario_enum not in orchestrator._simulators:
+        raise HTTPException(status_code=404, detail=f"Scenario not implemented: {scenario}")
+    
+    simulator = orchestrator._simulators[scenario_enum]
+    event_types = simulator.get_event_types()
+    
+    return {
+        "scenario": scenario,
+        "event_types": event_types
+    }
+
+
+# ============================================
+# CONNECTION STATS
+# ============================================
+
+@router.get("/connections")
+async def get_connections(request: Request) -> Dict[str, Any]:
+    """Get WebSocket connection statistics"""
+    manager = request.app.state.connection_manager
+    return manager.get_stats()

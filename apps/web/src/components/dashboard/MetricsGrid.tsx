@@ -89,9 +89,9 @@ export function MetricsGrid() {
   }, {} as Record<string, number>)
 
   const calculateTrend = (current: number, key: keyof typeof metrics) => {
-    if (metricsHistory.length < 10) return null
+    if (metricsHistory.length < 10) return undefined
     const oldValue = metricsHistory[0]?.[key] as number || 0
-    if (oldValue === 0) return null
+    if (oldValue === 0) return undefined
     const change = ((current - oldValue) / oldValue) * 100
     return { value: Math.round(change * 10) / 10, positive: change >= 0 }
   }

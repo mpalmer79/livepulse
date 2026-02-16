@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # Quick syntax/import check for backend
+  backend-check:
+    name: Backend Quick Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check Python syntax
+        run: |
+          cd apps/server
+          python -m py_compile main.py
+          python -m py_compile api/routes.py
+          python -m py_compile websocket/manager.py
+          python -m py_compile simulators/ecommerce.py
+          python -m py_compile sandbox/orchestrator.py
+
+  # Quick syntax check for frontend
+  frontend-check:
+    name: Frontend Quick Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install and check
+        run: |
+          cd apps/web
+          npm install
+          npx tsc --noEmit
+
+  # Status check that both passed
+  ci-status:
+    name: CI Status
+    runs-on: ubuntu-latest
+    needs: [backend-check, frontend-check]
+    
+    steps:
+      - name: All checks passed
+        run: echo "✅ All CI checks passed!"

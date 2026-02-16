@@ -20,10 +20,10 @@ export default function Dashboard() {
   }, [connect])
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <Header />
       
-      <main className="container mx-auto px-4 py-6 space-y-6">
+      <main className="container mx-auto px-6 py-8 space-y-6">
         {/* Control Panel */}
         <ControlPanel />
 
@@ -47,14 +47,16 @@ export default function Dashboard() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border mt-8 py-6">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>LivePulse - Built by Michael Palmer</p>
+      <footer className="border-t border-slate-200 bg-white mt-12 py-8">
+        <div className="container mx-auto px-6 text-center">
+          <p className="text-sm text-slate-500">
+            LivePulse - Built by <span className="font-medium text-slate-700">Michael Palmer</span>
+          </p>
           <a 
             href="https://github.com/mpalmer79" 
             target="_blank"
             rel="noopener noreferrer"
-            className="text-primary hover:underline"
+            className="text-sm text-violet-600 hover:text-violet-700 hover:underline mt-1 inline-block"
           >
             github.com/mpalmer79
           </a>

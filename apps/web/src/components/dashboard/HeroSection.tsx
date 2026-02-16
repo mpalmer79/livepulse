@@ -4,14 +4,14 @@ import { useStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
 export function HeroSection() {
-  const { 
-    sandboxState, 
-    setSpeed, 
-    toggleChaos, 
-    pauseSimulation, 
-    resumeSimulation, 
+  const {
+    sandboxState,
+    setSpeed,
+    toggleChaos,
+    pauseSimulation,
+    resumeSimulation,
     resetSimulation,
-    injectEvent 
+    injectEvent,
   } = useStore()
 
   const speeds = [
@@ -24,18 +24,23 @@ export function HeroSection() {
 
   return (
     <section className="relative overflow-hidden">
-      {/* Background with subtle gradient and image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center"
+      {/* Background image (VISIBLE) */}
+      <div
+        className="absolute inset-0 z-0 bg-cover bg-center opacity-70"
         style={{
-          backgroundImage: `
-            linear-gradient(135deg, rgba(248, 250, 252, 0.88) 0%, rgba(241, 245, 249, 0.92) 50%, rgba(248, 250, 252, 1) 100%),
-            url('https://images.unsplash.com/photo-1497215842964-222b430dc094?w=1920&q=80')
-          `
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1497215842964-222b430dc094?w=1920&q=80')",
         }}
+        aria-hidden="true"
       />
-      
-      <div className="relative container mx-auto px-6 pt-12 pb-24">
+
+      {/* Light overlay (keep subtle so image shows through) */}
+      <div
+        className="absolute inset-0 z-10 bg-gradient-to-br from-slate-50/55 via-slate-50/65 to-slate-50/80"
+        aria-hidden="true"
+      />
+
+      <div className="relative z-20 container mx-auto px-6 pt-12 pb-24">
         {/* Headline */}
         <div className="max-w-3xl mb-10">
           <h1 className="text-4xl md:text-5xl font-normal text-slate-900 mb-4 leading-tight">
@@ -43,9 +48,9 @@ export function HeroSection() {
             <span className="block text-blue-600">in Real-Time</span>
           </h1>
           <p className="text-lg text-slate-600 leading-relaxed">
-            Watch simulated e-commerce activity unfold live. This sandbox demonstrates 
-            real-time data streaming, interactive visualizations, and actionable business 
-            intelligence—the building blocks of modern analytics platforms.
+            Watch simulated e-commerce activity unfold live. This sandbox demonstrates real-time data
+            streaming, interactive visualizations, and actionable business intelligence—the building
+            blocks of modern analytics platforms.
           </p>
         </div>
 
@@ -54,40 +59,29 @@ export function HeroSection() {
           <div className="flex flex-wrap items-center gap-8">
             {/* Simulation Status */}
             <div className="flex items-center gap-4">
-              <div className="text-sm font-medium text-slate-500 uppercase tracking-wide">
+              <div className="text-sm font-medium text-slate-500 uppercase tracking-wider">
                 Simulation
               </div>
-              <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg">
-                {sandboxState?.is_running ? (
-                  <button
-                    onClick={pauseSimulation}
-                    className="px-4 py-2 rounded-md bg-white shadow-sm text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
-                  >
+              <div className="flex items-center gap-2">
+                {sandboxState?.isRunning ? (
+                  <button onClick={pauseSimulation} className="btn-secondary">
                     Pause
                   </button>
                 ) : (
-                  <button
-                    onClick={resumeSimulation}
-                    className="px-4 py-2 rounded-md bg-emerald-500 shadow-sm text-sm font-medium text-white hover:bg-emerald-600 transition-colors"
-                  >
+                  <button onClick={resumeSimulation} className="btn-primary">
                     Resume
                   </button>
                 )}
-                <button
-                  onClick={resetSimulation}
-                  className="px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:bg-white hover:shadow-sm transition-all"
-                >
+                <button onClick={resetSimulation} className="btn-secondary">
                   Reset
                 </button>
               </div>
             </div>
 
-            {/* Speed Control */}
+            {/* Speed Controls */}
             <div className="flex items-center gap-4">
-              <div className="text-sm font-medium text-slate-500 uppercase tracking-wide">
-                Speed
-              </div>
-              <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
+              <div className="text-sm font-medium text-slate-500 uppercase tracking-wider">Speed</div>
+              <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-1">
                 {speeds.map((s) => (
                   <button
                     key={s.value}
@@ -96,7 +90,7 @@ export function HeroSection() {
                       'px-3 py-2 rounded-md text-sm font-medium transition-all',
                       sandboxState?.speed === s.value
                         ? 'bg-blue-600 text-white shadow-sm'
-                        : 'text-slate-600 hover:bg-white hover:shadow-sm'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-white'
                     )}
                   >
                     {s.label}
@@ -105,51 +99,32 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* Chaos Mode */}
+            {/* Chaos Toggle */}
             <div className="flex items-center gap-4">
               <button
                 onClick={toggleChaos}
-                className={cn(
-                  'px-4 py-2 rounded-lg text-sm font-medium transition-all',
-                  sandboxState?.chaos_enabled
-                    ? 'bg-red-500 text-white shadow-lg shadow-red-500/25'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                )}
+                className={cn('btn-secondary', sandboxState?.chaosEnabled ? 'ring-2 ring-purple-300' : '')}
               >
-                Chaos {sandboxState?.chaos_enabled ? 'ON' : 'OFF'}
+                Chaos {sandboxState?.chaosEnabled ? 'ON' : 'OFF'}
               </button>
             </div>
-          </div>
 
-          {/* Event Injection */}
-          <div className="mt-6 pt-6 border-t border-slate-100">
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="text-sm font-medium text-slate-500 uppercase tracking-wide">
-                Inject Events
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => injectEvent('order', 5)}
-                  className="btn-success"
-                >
+            {/* Inject Events */}
+            <div className="w-full pt-6 border-t border-slate-200">
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="text-sm font-medium text-slate-500 uppercase tracking-wider">
+                  Inject Events
+                </div>
+                <button onClick={() => injectEvent('order', 5)} className="btn-success">
                   + 5 Orders
                 </button>
-                <button
-                  onClick={() => injectEvent('cart_add', 10)}
-                  className="btn-primary"
-                >
+                <button onClick={() => injectEvent('cart_add', 10)} className="btn-primary">
                   + 10 Cart Adds
                 </button>
-                <button
-                  onClick={() => injectEvent('page_view', 25)}
-                  className="btn-secondary"
-                >
+                <button onClick={() => injectEvent('page_view', 25)} className="btn-secondary">
                   + 25 Page Views
                 </button>
-                <button
-                  onClick={() => injectEvent('refund', 3)}
-                  className="btn-danger"
-                >
+                <button onClick={() => injectEvent('refund', 3)} className="btn-danger">
                   + 3 Refunds
                 </button>
               </div>

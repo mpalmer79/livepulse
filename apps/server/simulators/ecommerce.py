@@ -483,7 +483,7 @@ class EcommerceSimulator(BaseSimulator):
     
     def get_aggregated_metrics(self) -> EcommerceMetrics:
         """Calculate aggregated e-commerce metrics"""
-        now = datetime.utcnow()
+    
         window_events = self._metric_window
         
         # Count events by type

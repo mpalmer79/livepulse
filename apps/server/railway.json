@@ -1,5 +1,4 @@
 {
-  "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS"
   },
@@ -11,12 +10,3 @@
     "restartPolicyMaxRetries": 3
   }
 }
-```
-
----
-
-## **Also add a Procfile as backup**
-
-**Path:** `apps/server/Procfile`
-```
-web: uvicorn main:app --host 0.0.0.0 --port $PORT

@@ -25,59 +25,67 @@ export function RevenueChart() {
 
   if (data.length < 2) {
     return (
-      <div className="bg-card border border-border rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-4">Revenue & Activity</h3>
-        <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-          Collecting data...
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <h3 className="text-lg font-semibold text-slate-800 mb-4">Revenue & Activity</h3>
+        <div className="h-[300px] flex items-center justify-center text-slate-400">
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3">
+              <div className="w-6 h-6 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
+            </div>
+            <p>Collecting data...</p>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="bg-card border border-border rounded-lg p-6">
-      <h3 className="text-lg font-semibold mb-4">Revenue & Activity</h3>
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+      <h3 className="text-lg font-semibold text-slate-800 mb-4">Revenue & Activity</h3>
       
       <div className="h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
             <defs>
               <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="colorEvents" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
                 <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
               </linearGradient>
+              <linearGradient id="colorEvents" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
+              </linearGradient>
             </defs>
             
-            <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
             
             <XAxis 
               dataKey="time" 
-              stroke="#666"
-              tick={{ fill: '#666', fontSize: 12 }}
+              stroke="#94a3b8"
+              tick={{ fill: '#64748b', fontSize: 12 }}
               tickFormatter={(v) => `${v}s`}
+              axisLine={{ stroke: '#e2e8f0' }}
             />
             
             <YAxis 
-              stroke="#666"
-              tick={{ fill: '#666', fontSize: 12 }}
+              stroke="#94a3b8"
+              tick={{ fill: '#64748b', fontSize: 12 }}
               tickFormatter={(v) => `$${v}`}
+              axisLine={{ stroke: '#e2e8f0' }}
             />
             
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1a1a2e',
-                border: '1px solid #333',
-                borderRadius: '8px',
+                backgroundColor: '#ffffff',
+                border: '1px solid #e2e8f0',
+                borderRadius: '12px',
+                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
               }}
-              labelStyle={{ color: '#999' }}
+              labelStyle={{ color: '#64748b', marginBottom: '8px' }}
               formatter={(value: number, name: string) => {
                 if (name === 'revenue') return [formatCurrency(value), 'Revenue/min']
                 if (name === 'orders') return [(value / 50).toFixed(1), 'Orders/min']
@@ -85,12 +93,15 @@ export function RevenueChart() {
               }}
             />
             
-            <Legend />
+            <Legend 
+              wrapperStyle={{ paddingTop: '20px' }}
+              formatter={(value) => <span className="text-slate-600 text-sm">{value}</span>}
+            />
             
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke="#22c55e"
+              stroke="#10b981"
               strokeWidth={2}
               fill="url(#colorRevenue)"
               name="Revenue"
@@ -99,7 +110,7 @@ export function RevenueChart() {
             <Area
               type="monotone"
               dataKey="orders"
-              stroke="#3b82f6"
+              stroke="#8b5cf6"
               strokeWidth={2}
               fill="url(#colorOrders)"
               name="Orders"
@@ -108,7 +119,7 @@ export function RevenueChart() {
             <Area
               type="monotone"
               dataKey="events"
-              stroke="#8b5cf6"
+              stroke="#06b6d4"
               strokeWidth={2}
               fill="url(#colorEvents)"
               name="Events"

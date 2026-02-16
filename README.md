@@ -1,6 +1,6 @@
 # LivePulse
 
-Real-time analytics platform with interactive sandbox environment.
+Real-time analytics platform with interactive sandbox environment. 
 
 ## Quick Start
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useStore } from '@/lib/store'
-import { cn, getEventColor, timeAgo, formatCurrency } from '@/lib/utils'
+import { cn, timeAgo, formatCurrency } from '@/lib/utils'
 import { 
   Package, 
   ShoppingCart, 
@@ -10,30 +10,66 @@ import {
   Star,
   Trash2,
   CheckCircle,
-  ArrowRight
+  ArrowRight,
+  Sparkles
 } from 'lucide-react'
 
-const eventIcons: Record<string, React.ReactNode> = {
-  order: <Package className="h-3.5 w-3.5" />,
-  cart_add: <ShoppingCart className="h-3.5 w-3.5" />,
-  cart_remove: <Trash2 className="h-3.5 w-3.5" />,
-  page_view: <Eye className="h-3.5 w-3.5" />,
-  checkout_start: <ArrowRight className="h-3.5 w-3.5" />,
-  checkout_complete: <CheckCircle className="h-3.5 w-3.5" />,
-  refund: <CreditCard className="h-3.5 w-3.5" />,
-  review: <Star className="h-3.5 w-3.5" />,
+const eventConfig: Record<string, { icon: React.ReactNode; bg: string; text: string }> = {
+  order: { 
+    icon: <Package className="h-4 w-4" />, 
+    bg: 'bg-emerald-100', 
+    text: 'text-emerald-600' 
+  },
+  cart_add: { 
+    icon: <ShoppingCart className="h-4 w-4" />, 
+    bg: 'bg-blue-100', 
+    text: 'text-blue-600' 
+  },
+  cart_remove: { 
+    icon: <Trash2 className="h-4 w-4" />, 
+    bg: 'bg-orange-100', 
+    text: 'text-orange-600' 
+  },
+  page_view: { 
+    icon: <Eye className="h-4 w-4" />, 
+    bg: 'bg-slate-100', 
+    text: 'text-slate-600' 
+  },
+  checkout_start: { 
+    icon: <ArrowRight className="h-4 w-4" />, 
+    bg: 'bg-violet-100', 
+    text: 'text-violet-600' 
+  },
+  checkout_complete: { 
+    icon: <CheckCircle className="h-4 w-4" />, 
+    bg: 'bg-teal-100', 
+    text: 'text-teal-600' 
+  },
+  refund: { 
+    icon: <CreditCard className="h-4 w-4" />, 
+    bg: 'bg-red-100', 
+    text: 'text-red-600' 
+  },
+  review: { 
+    icon: <Star className="h-4 w-4" />, 
+    bg: 'bg-yellow-100', 
+    text: 'text-yellow-600' 
+  },
 }
 
 export function EventFeed() {
   const { events, clearEvents } = useStore()
 
   return (
-    <div className="bg-card border border-border rounded-lg">
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        <h3 className="font-semibold">Live Events</h3>
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="flex items-center justify-between p-4 border-b border-slate-100">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-violet-500" />
+          <h3 className="font-semibold text-slate-800">Live Events</h3>
+        </div>
         <button
           onClick={clearEvents}
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+          className="text-xs text-slate-400 hover:text-slate-600 transition-colors px-2 py-1 rounded-lg hover:bg-slate-100"
         >
           Clear
         </button>
@@ -41,80 +77,84 @@ export function EventFeed() {
 
       <div className="h-[400px] overflow-y-auto">
         {events.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
-            Waiting for events...
+          <div className="flex flex-col items-center justify-center h-full text-slate-400">
+            <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">
+              <Sparkles className="h-6 w-6 text-slate-300" />
+            </div>
+            <p className="text-sm">Waiting for events...</p>
           </div>
         ) : (
-          <div className="divide-y divide-border">
-            {events.map((event) => (
-              <div
-                key={event.id}
-                className="p-3 hover:bg-muted/50 transition-colors animate-fade-in"
-              >
-                <div className="flex items-start gap-3">
-                  {/* Icon */}
-                  <div className={cn(
-                    'p-1.5 rounded-md mt-0.5',
-                    getEventColor(event.type).replace('bg-', 'bg-') + '/20',
-                    getEventColor(event.type).replace('bg-', 'text-')
-                  )}>
-                    {eventIcons[event.type] || <Eye className="h-3.5 w-3.5" />}
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-sm font-medium capitalize">
-                        {event.type.replace('_', ' ')}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {timeAgo(event.timestamp)}
-                      </span>
+          <div className="divide-y divide-slate-50">
+            {events.map((event) => {
+              const config = eventConfig[event.type] || eventConfig.page_view
+              
+              return (
+                <div
+                  key={event.id}
+                  className="p-4 hover:bg-slate-50 transition-colors event-enter"
+                >
+                  <div className="flex items-start gap-3">
+                    {/* Icon */}
+                    <div className={cn('p-2 rounded-xl', config.bg, config.text)}>
+                      {config.icon}
                     </div>
 
-                    {/* Event details */}
-                    <div className="text-xs text-muted-foreground mt-0.5">
-                      {event.type === 'order' && (
-                        <span className="text-green-400">
-                          {formatCurrency(event.data.total)} • {event.data.item_count} items
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-sm font-medium text-slate-800 capitalize">
+                          {event.type.replace('_', ' ')}
                         </span>
-                      )}
-                      {event.type === 'cart_add' && (
-                        <span>{event.data.product_name}</span>
-                      )}
-                      {event.type === 'page_view' && (
-                        <span>{event.data.page_type} • {event.data.source}</span>
-                      )}
-                      {event.type === 'refund' && (
-                        <span className="text-red-400">
-                          {formatCurrency(event.data.refund_amount)} • {event.data.reason}
+                        <span className="text-xs text-slate-400">
+                          {timeAgo(event.timestamp)}
                         </span>
-                      )}
-                      {event.type === 'review' && (
-                        <span>
-                          {'⭐'.repeat(event.data.rating)} {event.data.product_name}
-                        </span>
-                      )}
-                      {event.type === 'checkout_start' && (
-                        <span>{formatCurrency(event.data.total)} • {event.data.item_count} items</span>
-                      )}
-                      {event.type === 'checkout_complete' && (
-                        <span className="text-emerald-400">
-                          {formatCurrency(event.data.total)} • {event.data.payment_method}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Region */}
-                    {event.data.region_name && (
-                      <div className="text-xs text-muted-foreground/60 mt-0.5">
-                        📍 {event.data.region_name}
                       </div>
-                    )}
+
+                      {/* Event details */}
+                      <div className="text-sm text-slate-500 mt-1">
+                        {event.type === 'order' && (
+                          <span className="text-emerald-600 font-medium">
+                            {formatCurrency(event.data.total)} • {event.data.item_count} items
+                          </span>
+                        )}
+                        {event.type === 'cart_add' && (
+                          <span>{event.data.product_name}</span>
+                        )}
+                        {event.type === 'page_view' && (
+                          <span>{event.data.page_type} • {event.data.source}</span>
+                        )}
+                        {event.type === 'refund' && (
+                          <span className="text-red-500">
+                            {formatCurrency(event.data.refund_amount)} • {event.data.reason}
+                          </span>
+                        )}
+                        {event.type === 'review' && (
+                          <span>
+                            {'⭐'.repeat(event.data.rating)} {event.data.product_name}
+                          </span>
+                        )}
+                        {event.type === 'checkout_start' && (
+                          <span>{formatCurrency(event.data.total)} • {event.data.item_count} items</span>
+                        )}
+                        {event.type === 'checkout_complete' && (
+                          <span className="text-teal-600 font-medium">
+                            {formatCurrency(event.data.total)} • {event.data.payment_method}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Region */}
+                      {event.data.region_name && (
+                        <div className="text-xs text-slate-400 mt-1 flex items-center gap-1">
+                          <span>📍</span>
+                          <span>{event.data.region_name}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>

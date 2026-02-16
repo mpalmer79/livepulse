@@ -5,11 +5,11 @@ import {
   Play, 
   Pause, 
   RotateCcw, 
-  Zap, 
   AlertTriangle,
   ShoppingCart,
   Package,
-  CreditCard
+  CreditCard,
+  Gauge
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -27,52 +27,60 @@ export function ControlPanel() {
   const speeds = [1, 5, 10, 25, 50]
 
   return (
-    <div className="bg-card border border-border rounded-lg p-4">
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
       <div className="flex flex-wrap items-center gap-6">
         {/* Playback Controls */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground mr-2">Playback:</span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 text-sm text-slate-500">
+            <Gauge className="h-4 w-4" />
+            <span className="font-medium">Playback</span>
+          </div>
           
-          {sandboxState?.is_running ? (
+          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+            {sandboxState?.is_running ? (
+              <button
+                onClick={pauseSimulation}
+                className="p-2 rounded-lg bg-white shadow-sm hover:shadow transition-all"
+                title="Pause"
+              >
+                <Pause className="h-4 w-4 text-slate-700" />
+              </button>
+            ) : (
+              <button
+                onClick={resumeSimulation}
+                className="p-2 rounded-lg bg-emerald-500 text-white shadow-sm hover:bg-emerald-600 transition-all"
+                title="Resume"
+              >
+                <Play className="h-4 w-4" />
+              </button>
+            )}
+            
             <button
-              onClick={pauseSimulation}
-              className="p-2 rounded-md bg-secondary hover:bg-secondary/80 transition-colors"
-              title="Pause"
+              onClick={resetSimulation}
+              className="p-2 rounded-lg hover:bg-white hover:shadow-sm transition-all"
+              title="Reset"
             >
-              <Pause className="h-4 w-4" />
+              <RotateCcw className="h-4 w-4 text-slate-500" />
             </button>
-          ) : (
-            <button
-              onClick={resumeSimulation}
-              className="p-2 rounded-md bg-green-600 hover:bg-green-700 transition-colors"
-              title="Resume"
-            >
-              <Play className="h-4 w-4" />
-            </button>
-          )}
-          
-          <button
-            onClick={resetSimulation}
-            className="p-2 rounded-md bg-secondary hover:bg-secondary/80 transition-colors"
-            title="Reset"
-          >
-            <RotateCcw className="h-4 w-4" />
-          </button>
+          </div>
         </div>
 
+        {/* Divider */}
+        <div className="h-8 w-px bg-slate-200" />
+
         {/* Speed Control */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Speed:</span>
-          <div className="flex gap-1">
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-slate-500 font-medium">Speed</span>
+          <div className="flex gap-1 bg-slate-100 p-1 rounded-xl">
             {speeds.map((s) => (
               <button
                 key={s}
                 onClick={() => setSpeed(s)}
                 className={cn(
-                  'px-3 py-1 rounded text-sm font-medium transition-colors',
+                  'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
                   sandboxState?.speed === s
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-secondary hover:bg-secondary/80'
+                    ? 'bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-sm'
+                    : 'text-slate-600 hover:bg-white hover:shadow-sm'
                 )}
               >
                 {s}x
@@ -81,50 +89,51 @@ export function ControlPanel() {
           </div>
         </div>
 
+        {/* Divider */}
+        <div className="h-8 w-px bg-slate-200" />
+
         {/* Chaos Mode */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={toggleChaos}
-            className={cn(
-              'flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
-              sandboxState?.chaos_enabled
-                ? 'bg-red-600 text-white'
-                : 'bg-secondary hover:bg-secondary/80'
-            )}
-          >
-            <AlertTriangle className="h-4 w-4" />
-            Chaos {sandboxState?.chaos_enabled ? 'ON' : 'OFF'}
-          </button>
-        </div>
+        <button
+          onClick={toggleChaos}
+          className={cn(
+            'flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all',
+            sandboxState?.chaos_enabled
+              ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg shadow-red-500/25'
+              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+          )}
+        >
+          <AlertTriangle className="h-4 w-4" />
+          Chaos {sandboxState?.chaos_enabled ? 'ON' : 'OFF'}
+        </button>
 
         {/* Event Injection */}
         <div className="flex items-center gap-2 ml-auto">
-          <span className="text-sm text-muted-foreground">Inject:</span>
+          <span className="text-sm text-slate-500 font-medium">Inject</span>
           
           <button
             onClick={() => injectEvent('order', 5)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm bg-green-600/20 text-green-400 hover:bg-green-600/30 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors"
             title="Inject 5 orders"
           >
-            <Package className="h-3.5 w-3.5" />
+            <Package className="h-4 w-4" />
             Orders
           </button>
           
           <button
             onClick={() => injectEvent('cart_add', 10)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
             title="Inject 10 cart adds"
           >
-            <ShoppingCart className="h-3.5 w-3.5" />
+            <ShoppingCart className="h-4 w-4" />
             Carts
           </button>
           
           <button
             onClick={() => injectEvent('refund', 3)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm bg-red-600/20 text-red-400 hover:bg-red-600/30 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
             title="Inject 3 refunds"
           >
-            <CreditCard className="h-3.5 w-3.5" />
+            <CreditCard className="h-4 w-4" />
             Refunds
           </button>
         </div>

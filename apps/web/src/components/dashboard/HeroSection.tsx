@@ -160,8 +160,3 @@ export function HeroSection() {
     </section>
   )
 }
-```
-
-The key change is line 28-31 where the background image URL is now:
-```
-https://images.unsplash.com/photo-1497215842964-222b430dc094?w=1920&q=80

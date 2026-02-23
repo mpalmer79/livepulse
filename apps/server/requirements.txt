@@ -5,7 +5,7 @@ uvicorn[standard]==0.32.1
 python-multipart==0.0.12
 
 # WebSocket handling
-websockets==13.1
+websockets==16.0
 
 # Redis for pub/sub and caching
 redis==5.2.0
